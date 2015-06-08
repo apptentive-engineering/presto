@@ -27,6 +27,7 @@ public final class UUIDType
     extends AbstractFixedWidthType
 {
     public static final byte SIZE_OF_UUID = 16; // what length?
+    public static final int INT_SIZE_UUID = 32;
 
     public static final UUIDType UUID = new UUIDType();
 
@@ -49,11 +50,11 @@ public final class UUIDType
 //     */
 //    String getDisplayName();
 
-//        /**
-//         * True if the type supports equalTo and hash.
-//         */
-//        @Override
-//        public boolean isComparable() { return true; }
+        /**
+         * True if the type supports equalTo and hash.
+         */
+        @Override
+        public boolean isComparable() { return true; }
 
 //        /**
 //         * True if the type supports compareTo.
@@ -100,7 +101,7 @@ public final class UUIDType
                 return null;
             }
 
-            return block.getSlice(position, 0, SIZE_OF_UUID);
+            return block.getSlice(position, 0, INT_SIZE_UUID);
         }
 //
 //    /**
@@ -136,7 +137,7 @@ public final class UUIDType
     @Override
     public void writeSlice(BlockBuilder blockBuilder, Slice value)
     {
-        blockBuilder.writeBytes(value, 0, SIZE_OF_UUID).closeEntry();
+        writeSlice(blockBuilder, value, 0, INT_SIZE_UUID);
     }
 
     @Override
@@ -152,28 +153,34 @@ public final class UUIDType
             blockBuilder.appendNull();
         }
         else {
-            blockBuilder.writeBytes(block.getSlice(position, 0, SIZE_OF_UUID), 0, SIZE_OF_UUID).closeEntry();
+            blockBuilder.writeBytes(block.getSlice(position, 0, INT_SIZE_UUID), 0, INT_SIZE_UUID).closeEntry();
         }
     }
-//    /**
-//     * Are the values in the specified blocks at the specified positions equal?
-//     */
-//    public boolean equalTo(Block leftBlock, int leftPosition, Block rightBlock, int rightPosition)
-//    {
-//        Slice leftValue = leftBlock.getSlice(leftPosition, 0, SIZE_OF_UUID);
+    /**
+     * Are the values in the specified blocks at the specified positions equal?
+     */
+    public boolean equalTo(Block leftBlock, int leftPosition, Block rightBlock, int rightPosition)
+    {
+        Slice leftValue = leftBlock.getSlice(leftPosition, 0, INT_SIZE_UUID);
 //        Slice rightValue = rightBlock.getSlice(rightPosition, 0, SIZE_OF_UUID);
 //        return leftValue == rightValue;
-//    }
-//
-//    /**
-//     * Calculates the hash code of the value at the specified position in the
-//     * specified block.
-//     */
-//    @Override
-//    public int hash(Block block, int position)
-//    {
-//        return block.getSlice(position, 0, SIZE_OF_UUID).hashCode();
-//    }
+//        int leftLength = leftBlock.getLength(leftPosition);
+//        int rightLength = rightBlock.getLength(rightPosition);
+//        if (leftLength != rightLength) {
+//            return false;
+//        }
+        return leftBlock.equals(leftPosition, 0, rightBlock, rightPosition, 0, INT_SIZE_UUID);
+    }
+
+    /**
+     * Calculates the hash code of the value at the specified position in the
+     * specified block.
+     */
+    @Override
+    public int hash(Block block, int position)
+    {
+        return block.getSlice(position, 0, INT_SIZE_UUID).hashCode();
+    }
 
 //    /**
 //     * Compare the values in the specified block at the specified positions equal.
