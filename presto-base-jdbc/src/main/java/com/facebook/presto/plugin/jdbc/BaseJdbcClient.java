@@ -199,6 +199,12 @@ public class BaseJdbcClient
                 while (resultSet.next()) {
                     found = true;
                     Type columnType = toPrestoType(resultSet.getInt("DATA_TYPE"));
+
+                    // Treat UUID types like VARCHAR
+                    if (columnType == null && resultSet.getString("type_name").equals("uuid")) {
+                        columnType = VARCHAR;
+                    }
+
                     // skip unsupported column types
                     if (columnType != null) {
                         String columnName = resultSet.getString("COLUMN_NAME");
