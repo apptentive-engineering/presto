@@ -26,8 +26,7 @@ import static com.facebook.presto.spi.type.TypeSignature.parseTypeSignature;
 public final class UUIDType
     extends AbstractFixedWidthType
 {
-    public static final byte SIZE_OF_UUID = 16; // what length?
-    public static final int INT_SIZE_UUID = 32;
+    public static final int SIZE_OF_UUID = 16; // what length?
 
     public static final UUIDType UUID = new UUIDType();
 
@@ -101,7 +100,7 @@ public final class UUIDType
                 return null;
             }
 
-            return block.getSlice(position, 0, INT_SIZE_UUID);
+            return block.getSlice(position, 0, SIZE_OF_UUID);
         }
 //
 //    /**
@@ -137,7 +136,7 @@ public final class UUIDType
     @Override
     public void writeSlice(BlockBuilder blockBuilder, Slice value)
     {
-        writeSlice(blockBuilder, value, 0, INT_SIZE_UUID);
+        writeSlice(blockBuilder, value, 0, SIZE_OF_UUID);
     }
 
     @Override
@@ -153,7 +152,7 @@ public final class UUIDType
             blockBuilder.appendNull();
         }
         else {
-            blockBuilder.writeBytes(block.getSlice(position, 0, INT_SIZE_UUID), 0, INT_SIZE_UUID).closeEntry();
+            blockBuilder.writeBytes(block.getSlice(position, 0, SIZE_OF_UUID), 0, SIZE_OF_UUID).closeEntry();
         }
     }
     /**
@@ -161,7 +160,7 @@ public final class UUIDType
      */
     public boolean equalTo(Block leftBlock, int leftPosition, Block rightBlock, int rightPosition)
     {
-        Slice leftValue = leftBlock.getSlice(leftPosition, 0, INT_SIZE_UUID);
+        Slice leftValue = leftBlock.getSlice(leftPosition, 0, SIZE_OF_UUID);
 //        Slice rightValue = rightBlock.getSlice(rightPosition, 0, SIZE_OF_UUID);
 //        return leftValue == rightValue;
 //        int leftLength = leftBlock.getLength(leftPosition);
@@ -169,7 +168,7 @@ public final class UUIDType
 //        if (leftLength != rightLength) {
 //            return false;
 //        }
-        return leftBlock.equals(leftPosition, 0, rightBlock, rightPosition, 0, INT_SIZE_UUID);
+        return leftBlock.equals(leftPosition, 0, rightBlock, rightPosition, 0, SIZE_OF_UUID);
     }
 
     /**
@@ -179,7 +178,7 @@ public final class UUIDType
     @Override
     public int hash(Block block, int position)
     {
-        return block.getSlice(position, 0, INT_SIZE_UUID).hashCode();
+        return block.getSlice(position, 0, SIZE_OF_UUID).hashCode();
     }
 
 //    /**
